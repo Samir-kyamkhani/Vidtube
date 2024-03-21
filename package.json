@@ -1,0 +1,20 @@
+{
+  "name": "vidtube",
+  "version": "1.0.0",
+  "description": "Creating a vidtube app a online video platform",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "dev": "nodemon src/index.js"
+  },
+  "keywords": [
+    "node",
+    "js"
+  ],
+  "author": "Samir Khan",
+  "license": "ISC",
+  "devDependencies": {
+    "nodemon": "^3.1.0",
+    "prettier": "^3.2.5"
+  }
+}
