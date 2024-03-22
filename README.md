@@ -6,7 +6,7 @@ Creating a vidtube app a online video platform
 
 ### Steps
 ###### 1. Folder structer setup ✔
-###### 2. Connect to database
+###### 2. Connect to database ✔
 1. Write a code to create const DB_NAME in constants.js file
 ```
 export const DB_NAME = "vidtube"
@@ -56,4 +56,70 @@ DB_CONNECTION()
     console.log("Server Connection failed:: ",error);
     throw error
 })
+```
+###### 3. Setup custome ApiError, ApiResponse and async function handling ✔
+1. Write a code for configure cookieParser(), Cors() middlewares or params (urlencoded), json formate
+```
+const data = "1mb";
+
+app.use(cors({
+    origin: process.env.CLIENT_URL,
+    credentials: true
+}))
+
+app.use(express.json({limit: data}))
+app.use(express.urlencoded({extended: true, limit: data}))
+app.use(cookieParser())
+```
+
+2. Create a High-oreder function in Utils folder for handle request or anync function code
+```
+const asyncHandler = (requestHandler) => (req, res, next) => {
+    Promise.resolve(requestHandler(req, res, next)).catch((error) => next(error.message))
+}
+
+export {asyncHandler}
+```
+3. Create a custom class Method for ApiError handling in Utlis folder
+```
+class ApiError extends Error {
+  constructor(
+    statusCode,
+    message = "Somthing went wrong !",
+    errorStack = "",
+    errors = [],
+  ) {
+    super(message);
+    this.statusCode = statusCode;
+    this.message = message;
+    this.errors = errors;
+    this.data = null;
+    this.success = false;
+
+    if (errorStack) {
+      this.errorStack = errorStack;
+    } else {
+      Error.captureStackTrace(this, this.constructor);
+    }
+  }
+}
+
+export {ApiError}
+```
+4. Create a custom class method for ApiResponse handling in Utils folder
+```
+class ApiResponse {
+    constructor(
+        statusCode,
+        message = "Success",
+        data,
+    ) {
+        this.statusCode = statusCode;
+        this.message = message;
+        this.data = data;
+        this.success = statusCode > 400;
+    }
+}
+
+export {ApiResponse}
 ```
