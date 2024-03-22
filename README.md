@@ -6,6 +6,56 @@ Creating a vidtube app a online video platform
 
 ### Steps
 ###### 1. Folder structer setup ✔
+1. Run comand for install backend
+```
+$ npm init
+```
+2. Run command for install devDependencies nodemon, prettier
+```
+$ npm i -D prettier
+$ npm i -D nodemon
+```
+3. Create a .env file
+4. Create a public/temp/.gitkeep file
+5. Create a .gitignore, .prettierrc, .prettierignore file
+#### .prettierrc
+```
+{
+    "singleQuote": false,
+    "bracketSpacing": true,
+    "tabWidth": 2,
+    "trailingComa": "es5",
+    "semi": true
+}
+```
+#### .prettierignore
+```
+/.vscode
+/node_modules
+./dist
+
+*.env
+.env
+.env.*
+```
+6. Create a src folder
+7. In the src folder
+    
+    Create javaScript files
+        
+        app.js
+        constants.js
+        index.js
+
+    Create Folders
+
+        controllers
+        db
+        middlewares
+        models
+        routes
+        utils
+
 ###### 2. Connect to database ✔
 1. Write a code to create const DB_NAME in constants.js file
 ```
