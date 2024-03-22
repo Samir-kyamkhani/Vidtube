@@ -18,7 +18,7 @@ $ npm i -D nodemon
 3. Create a .env file
 4. Create a public/temp/.gitkeep file
 5. Create a .gitignore, .prettierrc, .prettierignore file
-#### .prettierrc
+###### .prettierrc
 ```
 {
     "singleQuote": false,
@@ -28,7 +28,7 @@ $ npm i -D nodemon
     "semi": true
 }
 ```
-#### .prettierignore
+###### .prettierignore
 ```
 /.vscode
 /node_modules
