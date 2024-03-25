@@ -173,3 +173,96 @@ class ApiResponse {
 
 export {ApiResponse}
 ```
+###### 4. Create User and Video models
+1. Write a code for User Model data modling
+```
+const userSchema = new mongoose.Schema({
+    username: {
+        type: String,
+        required: true,
+        unique: true,
+        trim: true,
+        index: true,
+        lowercase: true,
+        
+    },
+    email: {
+        type: String,
+        required: true,
+        unique: true,
+        trim: true,
+        lowercase: true,
+        
+    },
+    fullName: {
+        type: String,
+        required: true,
+
+    },
+    password: {
+        type: String, // Password will be hashed in the bcrypt middleware
+        required: true,
+    },
+    refreshToken: {
+        type: String,
+    },
+    avatar: {
+        type: String, //letter on cloudinary
+        required: true,
+    },
+    coverImage: {
+        type: String, //letter on cloudinary
+
+    },
+    watchHistory: [
+        {
+            type: Schema.Types.ObjectId,
+            ref: "Video" //video model ref here
+        }
+    ]
+
+}, {timestamps: true})
+
+```
+2. Write a code for Video Model data modling || import mongoose-aggregate-paginate-v2
+
+```
+const videoSchema = new Schema({
+    title: {
+        type: String,
+        required: true,
+    }, 
+    description: {
+        type: String,
+        required: true,
+    },
+    videoFile: {
+        type: String, // middelware
+        required: true,
+    },
+    thumbnail: {
+        type: String, // middelware
+        required: true,
+    },
+    duration: {
+        type: Number,
+    },
+    views: {
+        type: Number,
+        required: true,
+    },
+    owner: {
+        type: Schema.Types.ObjectId,
+        ref: "User",
+    },
+    isPublished: {
+        type: Boolean,
+        required: true,
+        default: true,
+    }
+}, {timestamps: true});
+
+videoSchema.plugin(aggregatePaginate); //pagination plugin
+
+```
+3.
