@@ -57,11 +57,11 @@ $ npm i -D nodemon
         utils
 
 ###### 2. Connect to database ✔
-1. Write a code to create const DB_NAME in constants.js file
+Write a code to create const DB_NAME in constants.js file
 ```
 export const DB_NAME = "vidtube"
 ```
-2. Create index.js file in db folder and write a methode for connect database
+Create index.js file in db folder and write a methode for connect database
 ```
 const DB_CONNECTION = async () => {
     try {
@@ -75,7 +75,7 @@ const DB_CONNECTION = async () => {
 
 export default DB_CONNECTION;
 ```
-3. Write a code in app.js file for import express js and export default ap
+Write a code in app.js file for import express js and export default ap
 ```
 import express from "express"; 
 
@@ -83,7 +83,7 @@ const app = express();
 
 export default app
 ```
-4. Write a code in root index.js file for configure dotenv pkg, or import app for configure server to start and Import Db connection methode() to connect the database 
+Write a code in root index.js file for configure dotenv pkg, or import app for configure server to start and Import Db connection methode() to connect the database 
 ```
 //Configure dotenv
 dotenv.config({
@@ -108,7 +108,7 @@ DB_CONNECTION()
 })
 ```
 ###### 3. Setup custome ApiError, ApiResponse and async function handling ✔
-1. Write a code for configure cookieParser(), Cors() middlewares or params (urlencoded), json formate
+Write a code for configure cookieParser(), Cors() middlewares or params (urlencoded), json formate
 ```
 const data = "1mb";
 
@@ -122,7 +122,7 @@ app.use(express.urlencoded({extended: true, limit: data}))
 app.use(cookieParser())
 ```
 
-2. Create a High-oreder function in Utils folder for handle request or anync function code
+Create a High-oreder function in Utils folder for handle request or anync function code
 ```
 const asyncHandler = (requestHandler) => (req, res, next) => {
     Promise.resolve(requestHandler(req, res, next)).catch((error) => next(error.message))
@@ -130,7 +130,7 @@ const asyncHandler = (requestHandler) => (req, res, next) => {
 
 export {asyncHandler}
 ```
-3. Create a custom class Method for ApiError handling in Utlis folder
+Create a custom class Method for ApiError handling in Utlis folder
 ```
 class ApiError extends Error {
   constructor(
@@ -156,7 +156,7 @@ class ApiError extends Error {
 
 export {ApiError}
 ```
-4. Create a custom class method for ApiResponse handling in Utils folder
+Create a custom class method for ApiResponse handling in Utils folder
 ```
 class ApiResponse {
     constructor(
@@ -174,7 +174,7 @@ class ApiResponse {
 export {ApiResponse}
 ```
 ###### 4. Create User and Video models
-1. Write a code for User Model data modling
+Write a code for User Model data modling
 ```
 const userSchema = new mongoose.Schema({
     username: {
@@ -224,7 +224,7 @@ const userSchema = new mongoose.Schema({
 }, {timestamps: true})
 
 ```
-2. Write a code for Video Model data modling || import mongoose-aggregate-paginate-v2
+Write a code for Video Model data modling || import mongoose-aggregate-paginate-v2
 
 ```
 const videoSchema = new Schema({
@@ -265,4 +265,54 @@ const videoSchema = new Schema({
 videoSchema.plugin(aggregatePaginate); //pagination plugin
 
 ```
-3.
+Create a method for passwprd hasing with the help of bcrypt middleware
+```
+userSchema.pre("save", async function (next) {
+  if (!this.isModified("password")) return next();
+
+  this.password = await bcrypt.hash(this.password, 10);
+  next();
+}); // dont use callbacke function becose callback does'nt have "this" access
+```
+Create a method for comaprePassword with the help of bcrypt middleware
+```
+userSchema.methods.comparePassword = async function (password) {
+  return await bcrypt.compare(password, this.password);
+};
+```
+Create a method for AccessTokenGenerator with the help of jsonwebtoken middleware
+```
+userSchema.methods.generateAccessToken = function () {
+  return jwt.sign(
+    //payload || data
+    {
+      _id: this._id,
+      username: this.username,
+      email: this.email,
+      fullName: this.fullName,
+    },
+
+    // Secret key
+    // Access token env key
+    process.env.ACCESS_TOKEN_SECRET,
+
+    // expire key
+    {
+      expiresIn: process.env.ACCESS_TOKEN_EXPIRE,
+    },
+  );
+}; // generate access token for user
+```
+Create a method for RefreshTokenGenerator with the help of jsonwebtoken middleware
+```
+userSchema.methods.generateRefreshToken = function () {
+  return jwt.sign(
+    {
+      _id: this._id,
+    },
+    process.env.REFRESH_TOKEN_SECRET,
+    { expiresIn: process.env.REFRESH_TOKEN_EXPIRE },
+  );
+};
+```
+###### 5. 
