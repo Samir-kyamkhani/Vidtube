@@ -315,4 +315,45 @@ userSchema.methods.generateRefreshToken = function () {
   );
 };
 ```
-###### 5. 
+###### 5. Create Cloudinary and multer middleware methods for fole uploading
+Create a Cloudinary method to upload file on cloudinary or configure
+```
+cloudinary.config({ 
+  cloud_name: process.env.CLOUDINARY_NAME, 
+  api_key: process.env.CLOUDINARY_API_KEY, 
+  api_secret: process.env.CLOUDINARY_API_SECRET 
+});
+
+const uploadOnCloudinary = async (localFilePath) => {  
+    try {
+        if(!localFilePath) return;
+        const response = await cloudinary.uploader.upload(localFilePath, {
+            resource_type: 'auto'
+        })
+        return response.url;
+
+    } catch (error) {
+        fs.unlinkSync(localFilePath); // remove the local save file as upload operation failed
+        return null; // return null as upload operation failed
+    }
+}
+
+```
+
+Create a multer middlewae for uplodaing file on localy system
+```
+import multer from "multer";
+
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, "./public/temp")
+    },
+    filename: (req, file, cb) => {
+        cb(null, file.originalname)
+    }
+})
+
+export const upload = multer({
+    storage,
+})
+```
