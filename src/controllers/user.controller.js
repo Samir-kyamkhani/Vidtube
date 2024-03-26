@@ -40,8 +40,6 @@ const userSignup = asyncHandler(async (req, res) => {
 
   const avatar = await uploadOnCloudinary(avatarLocalPath)
   const coverImage = await uploadOnCloudinary(coverImageLocalPath)
-  console.log("avatar", avatar);
-  console.log("bg", coverImage);
 
   if (!avatar) {
     throw new ApiError(400, "Error uploading avatar");
