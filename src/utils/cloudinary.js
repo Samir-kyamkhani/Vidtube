@@ -1,10 +1,5 @@
 import {v2 as cloudinary} from "cloudinary";
 import fs from 'fs'; // node file system   
-import dotenv from 'dotenv';
-
-dotenv.config({
-    path: './.env' // config file path
-});
 
 cloudinary.config({ 
     cloud_name: process.env.CLOUD_NAME,

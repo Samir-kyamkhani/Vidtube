@@ -11,14 +11,14 @@ const cookieOptions = {
 };
 
 // generate Tokens
-const generateTokens = async (UserId) => {
+const generateTokens = async (userId) => {
   try {
-    const user = await User.findById(UserId);
-    const accessToken = await User.generateAccessToken();
-    const refreshToken = await User.generateRefreshToken();
+    const user = await User.findById(userId);
+    const accessToken =  user.generateAccessToken();
+    const refreshToken =  user.generateRefreshToken();
 
     user.refreshToken = refreshToken;
-    user.save({ ValidateBeforeSave: false });
+    await user.save({ validateBeforeSave: false });
 
     return { accessToken, refreshToken };
   } catch (error) {
@@ -112,10 +112,10 @@ const userLogin = asyncHandler(async (req, res) => {
   // Start here
 
   // user data handling
-  const { email, password, username } = req.body;
+  const { email, password, username} = req.body;
 
   // validation of login details
-  if (!email || !password || !username) {
+  if (!email && !password) {
     throw new ApiError(400, "Please fill all fields");
   }
 

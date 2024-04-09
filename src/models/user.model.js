@@ -63,8 +63,8 @@ userSchema.methods.generateAccessToken = function () {
     //payload || data
     {
       _id: this._id,
-      username: this.username,
       email: this.email,
+      username: this.username,
       fullName: this.fullName,
     },
 
@@ -74,7 +74,7 @@ userSchema.methods.generateAccessToken = function () {
 
     // expire key
     {
-      expiresIn: process.env.ACCESS_TOKEN_EXPIRE,
+      expiresIn: process.env.ACCESS_TOKEN_EXPIRY,
     },
   );
 }; // generate access token for user
@@ -84,8 +84,12 @@ userSchema.methods.generateRefreshToken = function () {
     {
       _id: this._id,
     },
+
     process.env.REFRESH_TOKEN_SECRET,
-    { expiresIn: process.env.REFRESH_TOKEN_EXPIRE },
+
+    {
+       expiresIn: process.env.REFRESH_TOKEN_EXPIRY 
+    },
   );
 };
 

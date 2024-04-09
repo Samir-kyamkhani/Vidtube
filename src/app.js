@@ -21,4 +21,4 @@ import userSignup from "./routes/user.routes.js";
 app.use("/api/v1/users", userSignup)
 
 
-export default app
+export {app}
