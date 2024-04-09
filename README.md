@@ -433,3 +433,94 @@ const userSignup = asyncHandler(async (req, res) => {
 });
 
 ```
+
+Creating a user controller to login user
+```
+const userLogin = asyncHandler(async (req, res) => {
+  // Algorithem to login user
+
+  // get login details from request body
+  // validation of login details
+  // check if user exists
+  // check if password correct
+  // generate tokens || remove password and refreshToken and send cookies
+  // return user and token
+
+  // Start here
+
+  // user data handling
+  const { email, password, username} = req.body;
+
+  // validation of login details
+  if (!email && !password) {
+    throw new ApiError(400, "Please fill all fields");
+  }
+
+  // check if user exists
+  const user = await User.findOne({
+    $or: [{ username }, { email }],
+  });
+
+  if (!user) {
+    throw new ApiError(404, "User not found");
+  }
+
+  // check if password correct
+  const isPasswordCorrect = await user.comparePassword(password);
+
+  if (!isPasswordCorrect) {
+    throw new ApiError(401, "Invalid password");
+  }
+
+  // generate tokens || remove password and refreshToken and send cookies
+  const { refreshToken, accessToken } = await generateTokens(user?._id);
+
+  // logedInUser
+  const logedInUser = await User.findById(user?._id).select(
+    "-password -refreshToken",
+  );
+
+  // return user and token
+  return res
+    .status(200)
+    .cookie("accessToken", accessToken, cookieOptions)
+    .cookie("refreshToken", refreshToken, cookieOptions)
+    .json(
+      new ApiResponse(200, "User logged in successfully", {
+        user: logedInUser,
+        accessToken,
+        refreshToken, // if user want to save manualy tokens
+      }),
+    );
+});
+```
+
+Creating a user controller to logout user
+```
+const userLogout = asyncHandler(async (req, res) => {
+  // Algorithem to logout user
+
+  // remove refreshToken from user
+  // remove cookies from response
+
+  // remove refreshToken from user
+  await User.findByIdAndUpdate(
+    req.user?._id,
+    {
+      $unset: {
+        refreshToken: 1,
+      },
+    },
+    {
+      new: true,
+    },
+  );
+
+  // remove cookies from response
+  return res
+    .status(200)
+    .clearCookie("accessToken", cookieOptions)
+    .clearCookie("refreshToken", cookieOptions)
+    .json(new ApiResponse(200, "User logged out successfully", null));
+});
+```
