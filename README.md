@@ -265,6 +265,24 @@ const videoSchema = new Schema({
 videoSchema.plugin(aggregatePaginate); //pagination plugin
 
 ```
+Write a code for Subscription Model data modling
+```
+import mongoose, {Schema} from "mongoose";
+
+const subscriptionSchema = new Schema({
+    subscriber: {
+        type: Schema.Types.ObjectId,
+        ref: "User"
+    },
+    channel: {
+        type: Schema.Types.ObjectId,
+        ref: "User"
+    }
+}, {timestamps: true})
+
+export const Subscription = mongoose.model("Subscription", subscriptionSchema)
+```
+
 Create a method for passwprd hasing with the help of bcrypt middleware
 ```
 userSchema.pre("save", async function (next) {
