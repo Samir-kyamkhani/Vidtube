@@ -554,7 +554,7 @@ const userLogout = asyncHandler(async (req, res) => {
 });
 ```
 
-Add refreshToken endpoinr
+Add refreshToken endpoint
 ```
 const refreshAccessToken = asyncHandler(async (req, res) => {
   const incomingRefreshToken = req.cookies.refreshToken || req.body.refreshToken;
