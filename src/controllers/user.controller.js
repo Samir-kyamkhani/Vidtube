@@ -52,7 +52,13 @@ const userSignup = asyncHandler(async (req, res) => {
 
   // Check for avatar or coverImage
   const avatarLocalPath = req.files?.avatar[0]?.path;
-  const coverImageLocalPath = req.files?.coverImage[0]?.path;
+  // const coverImageLocalPath = req.files?.coverImage[0]?.path;
+
+  let coverImageLocalPath;
+  
+  if (req.files && Array.isArray(req.files.coverImage) && req.files.coverImage.length > 0) {
+    coverImageLocalPath = req.files.coverImage[0].path
+  }
 
   if (!avatarLocalPath) {
     throw new ApiError(400, "Please upload avatar");
@@ -182,6 +188,6 @@ const userLogout = asyncHandler(async (req, res) => {
     .status(200)
     .clearCookie("accessToken", cookieOptions)
     .clearCookie("refreshToken", cookieOptions)
-    .json(new ApiResponse(200, "User logged out successfully", null));
+    .json(new ApiResponse(200, "User logged out successfully", {}));
 });
 export { userSignup, userLogin, userLogout };
