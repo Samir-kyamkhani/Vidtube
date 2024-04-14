@@ -1,5 +1,17 @@
 import { Router } from "express";
-import { refreshAccessToken, userLogin, userLogout, userSignup } from "../controllers/user.controller.js";
+import {
+  changeCurrentPassword,
+  getCurrentUser,
+  getUserCurrentProfile,
+  getWatchHistory,
+  refreshAccessToken,
+  updateUserAvatar,
+  updateUserCoverImage,
+  updateUserDetails,
+  userLogin,
+  userLogout,
+  userSignup,
+} from "../controllers/user.controller.js";
 import { upload } from "../middlewares/multer.middleware.js";
 import { verifyJwt } from "../middlewares/auth.middleware.js";
 
@@ -20,9 +32,23 @@ router.route("/signup").post(
   userSignup,
 );
 
-router.route("/login").post(userLogin)
+router.route("/login").post(userLogin);
 
 // Secure logout route, we are using verifyJwt middleware to verify the jwt token.
-router.route("/logout").post(verifyJwt, userLogout)
-router.route("/refresh-token").post(refreshAccessToken)
+router.route("/logout").post(verifyJwt, userLogout);
+router.route("/refresh-token").post(refreshAccessToken);
+router.route("/change-password").post(verifyJwt, changeCurrentPassword);
+router.route("/current-user").get(verifyJwt, getCurrentUser);
+router.route("/update-account").patch(verifyJwt, updateUserDetails);
+
+router
+  .route("/update-avatar")
+  .patch(verifyJwt, upload.single("avatar"), updateUserAvatar);
+router
+  .route("/update-cover-image")
+  .patch(verifyJwt, upload.single("coverImage"), updateUserCoverImage);
+
+router.route("/c/:username").get(verifyJwt, getUserCurrentProfile);
+router.route("/history").get(verifyJwt, getWatchHistory);
+
 export default router;
